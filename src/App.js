@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import page from "./pages/page";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import UserInfoContext from "./context/UserInfoContext";
+import { useState } from "react";
 
 function App() {
+  const [userInfo, setUserInfo] = useState({
+    status: false,
+    username: "",
+    usergender: "",
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <UserInfoContext.Provider value={{ userInfo, setUserInfo }}>
+        <BrowserRouter>
+          <Routes>
+            {page?.map(({ src, eletent }) => {
+              return <Route path={src} element={eletent} key={src} />;
+            })}
+          </Routes>
+        </BrowserRouter>
+      </UserInfoContext.Provider>
+      a
     </div>
   );
 }
