@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Register = ({ title }) => {
+  const navigate = useNavigate();
   const [registerId, setRegisterId] = useState();
   const [registePassword, setRegistePassword] = useState();
   const [gender, setGender] = useState();
@@ -28,9 +30,14 @@ const Register = ({ title }) => {
       },
     })
       .then((result) => {
-        console.log(result);
+        if (result.status === 201) {
+          alert("회원가입이 완료되었습니다. 로그인화면으로 이동합니다.");
+          navigate("/login");
+        } else {
+          alert(result.message);
+        }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => alert(err.response.data.message));
   };
 
   return (

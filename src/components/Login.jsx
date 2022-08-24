@@ -29,14 +29,13 @@ const Login = ({ title }) => {
         console.log(result);
         if (result.data.statusCode === 200) {
           console.log(data);
-          const { jwt } = data;
+          const { jwt, user } = data;
           window.localStorage.setItem("jwt", jwt);
           //   로그인 시 사용자 정보 리턴
           setUserInfo(() => {
             return {
               status: true,
-              username: "test",
-              usergender: "male",
+              ...user,
             };
           });
         }
@@ -62,14 +61,19 @@ const Login = ({ title }) => {
   return (
     <form>
       <h2>{title}</h2>
-      <label>아이디</label>
-      <input type="text" onChange={({ target }) => setId(target.value)} />
-      <br />
-      <label>비밀번호</label>
-      <input
-        type="password"
-        onChange={({ target }) => setPassword(target.value)}
-      />
+      {!status && (
+        <div>
+          <label>아이디</label>
+          <input type="text" onChange={({ target }) => setId(target.value)} />
+          <br />
+          <label>비밀번호</label>
+          <input
+            type="password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+      )}
+
       <br />
       {status ? (
         <button onClick={logout}>로그아웃</button>
