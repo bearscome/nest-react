@@ -1,4 +1,4 @@
-import page from "./pages/page";
+import { gnbPage, page } from "./pages/page";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import UserInfoContext from "./context/UserInfoContext";
 import { useState } from "react";
@@ -18,7 +18,7 @@ function App() {
       <UserInfoContext.Provider value={{ userInfo, setUserInfo }}>
         <BrowserRouter>
           <ul>
-            {page.map(({ src, title }) => {
+            {gnbPage.map(({ src, title }) => {
               return (
                 <li>
                   <Link

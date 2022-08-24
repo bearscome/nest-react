@@ -29,8 +29,8 @@ const Login = ({ title }) => {
         console.log(result);
         if (result.data.statusCode === 200) {
           console.log(data);
-          const { jwt, user } = data;
-          window.localStorage.setItem("jwt", jwt);
+          const { accessToken, user } = data;
+          window.localStorage.setItem("jwt", accessToken);
           //   로그인 시 사용자 정보 리턴
           setUserInfo(() => {
             return {
