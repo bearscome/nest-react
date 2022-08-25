@@ -1,14 +1,16 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import UserInfoContext from "../context/UserInfoContext";
 
-const BoardAdd = ({ title }) => {
+const BoardAddAnswer = ({ title }) => {
   const jwt = window.localStorage.getItem("jwt");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { userInfo } = useContext(UserInfoContext);
   const { status, username, usergender } = userInfo;
+  const { board_id, indent } = location.state;
 
   const [contentTitle, setContentTitle] = useState("");
   const [content, setContent] = useState("");
@@ -28,13 +30,21 @@ const BoardAdd = ({ title }) => {
     if (file && file.length > 0) {
       formData.append("file", file[0]);
     }
-    formData.append("title", contentTitle);
-    formData.append("content", content);
 
-    console.log("@@@_FormdData", formData);
+    let indentValue = [];
+    console.log("indent.length", indent);
+    for (let i = 0; i < indent; i++) {
+      indentValue.push("Re");
+    }
+
+    formData.append("title", contentTitle);
+    formData.append("content", `${indentValue.join()}: ${content}`);
+    formData.append("board_id", board_id);
+    formData.append("username", username);
+    formData.append("indent", indent);
 
     axios({
-      url: "http://localhost:3000/board/create",
+      url: "http://localhost:3000/board/answer/create",
       method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -43,7 +53,6 @@ const BoardAdd = ({ title }) => {
       data: formData,
     })
       .then((result) => {
-        console.log("????? 갑자기 안돼?", result);
         if (result.status === 201) {
           alert("등록이 완료되었습니다.");
           navigate("/board");
@@ -81,11 +90,11 @@ const BoardAdd = ({ title }) => {
       <input type={"file"} onChange={({ target }) => addFile(target.files)} />
       <br />
       <br />
-      <button onClick={() => add()} style={{ marginRight: "100px" }}>
-        등록하기
-      </button>
+      <div>
+        <button onClick={() => add()}>답글 달기</button>
+      </div>
     </div>
   );
 };
 
-export default BoardAdd;
+export default BoardAddAnswer;

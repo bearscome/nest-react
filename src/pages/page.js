@@ -4,6 +4,7 @@ import BoardAdd from "../components/BoardAdd";
 import Home from "../components/Home";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import BoardAddAnswer from "../components/BoardAddAnswer";
 
 const gnbPage = [
   {
@@ -63,6 +64,11 @@ const page = [
     src: "board/detail/:id",
     title: "게시판 상세",
     eletent: <BoardDetail title={"게시판 상세"} />,
+  },
+  {
+    src: "addBoardAnswer",
+    title: "게시판 답글 등록",
+    eletent: <BoardAddAnswer title={"게시판 답글 등록"} />,
   },
 ];
 

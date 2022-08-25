@@ -20,7 +20,7 @@ function App() {
           <ul>
             {gnbPage.map(({ src, title }) => {
               return (
-                <li>
+                <li key={src}>
                   <Link
                     to={`/${src.includes("/") ? "" : src}`}
                     key={title}

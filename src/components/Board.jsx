@@ -63,19 +63,33 @@ const Board = ({ title }) => {
       {list.status ? (
         <div>
           총 갯수 {list?.total}
-          {list?.data?.map((data) => {
-            return (
-              <p
-                key={data?.borad_id}
-                onClick={() => moveDetail(data?.borad_id)}
-              >
-                <span>번호: {data?.borad_id}</span>
-                <span>제목: {data?.title}</span>
-                <span>내용: {data?.content}</span>
-                <span>수정시간: {data?.updateAt}</span>
-              </p>
-            );
-          })}
+          <table>
+            <thead>
+              <tr>
+                <th>번호</th>
+                <th>답글번호</th>
+                <th>제목</th>
+                <th>내용</th>
+                <th>수정시간</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list?.data?.map((data) => {
+                return (
+                  <tr
+                    key={data?.borad_id}
+                    onClick={() => moveDetail(data?.borad_id)}
+                  >
+                    <th>{data?.borad_id}</th>
+                    {data?.indent ? <th>{data?.indent}</th> : <th>0</th>}
+                    <td>{data?.title}</td>
+                    <td>{data?.content}</td>
+                    <td>{data?.updateAt}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
           <div>
             <button onClick={() => paging("prev")}>이전</button>
             페이징 처리 화살표
