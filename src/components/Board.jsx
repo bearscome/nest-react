@@ -1,15 +1,24 @@
 import axios from "axios";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
+import UserInfoContext from "../context/UserInfoContext";
 
 const Board = ({ title }) => {
+  const { userInfo } = useContext(UserInfoContext);
+  const { status, authorities } = userInfo;
+
   const navigate = useNavigate();
   const limit = 10;
-  let count = 0;
-
   const countT = useRef(0);
 
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(0); // paging
+  const [apiResult, setApiResult] = useState(false); // all delete status
   const [list, setList] = useState({
     status: false,
     total: 0,
@@ -38,6 +47,27 @@ const Board = ({ title }) => {
 
   const moveDetail = (board_id) => {
     navigate(`/board/detail/${board_id}`, { state: { board_id } });
+  };
+
+  const deleteAll = () => {
+    const jwt = window.localStorage.getItem("jwt");
+    if (window.confirm("게시판의 전체 내용을 삭제하시겠습니까?") === true) {
+      axios({
+        url: "http://localhost:3000/board/deleteAll",
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        data: {},
+      }).then((res) => {
+        if (res.data.statusCode === 201) {
+          alert("전체삭제가 완료되었습니다.");
+          setApiResult(true);
+        }
+      });
+    }
   };
 
   useLayoutEffect(() => {
@@ -74,7 +104,7 @@ const Board = ({ title }) => {
       .catch((err) => {
         console.error(err);
       });
-  }, [offset]);
+  }, [offset, apiResult]);
 
   return (
     <div>
@@ -124,6 +154,9 @@ const Board = ({ title }) => {
             ))}
             <button onClick={() => paging("button", "next")}>다음</button>
           </div>
+          {authorities === "ADMIN" && (
+            <button onClick={() => deleteAll()}>전체 삭제</button>
+          )}
         </div>
       ) : (
         ""

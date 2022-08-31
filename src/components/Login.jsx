@@ -40,7 +40,7 @@ const Login = ({ title }) => {
           });
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => alert(err.response.data.message));
   };
 
   const logout = (e) => {

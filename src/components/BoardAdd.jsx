@@ -43,7 +43,6 @@ const BoardAdd = ({ title }) => {
       data: formData,
     })
       .then((result) => {
-        console.log("????? 갑자기 안돼?", result);
         if (result.status === 201) {
           alert("등록이 완료되었습니다.");
           navigate("/board");

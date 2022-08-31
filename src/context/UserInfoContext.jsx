@@ -8,6 +8,7 @@ const UserInfoContext = createContext({
     updateAt: "",
     gender: "",
     username: "",
+    authorities: "",
   },
   setUserInfo: () => {},
 });

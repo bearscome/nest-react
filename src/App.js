@@ -35,7 +35,7 @@ function App() {
           <div>
             <p>
               {userInfo.status &&
-                `아이디: ${userInfo.username}, 성별: ${userInfo.gender}, 유니크아이디:${userInfo.id}`}
+                `아이디: ${userInfo.username}, 성별: ${userInfo.gender}, 유니크아이디:${userInfo.id} 권한: ${userInfo.authorities}`}
             </p>
           </div>
 
