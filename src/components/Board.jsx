@@ -7,20 +7,33 @@ const Board = ({ title }) => {
   const limit = 10;
   let count = 0;
 
+  const countT = useRef(0);
+
   const [offset, setOffset] = useState(0);
   const [list, setList] = useState({
     status: false,
     total: 0,
     data: [],
   });
+  const [listPage, setListPage] = useState([]);
 
-  const paging = (direct) => {
-    if (direct === "prev") {
-      if (!count === 0) count--;
-    } else if (direct === "next") {
-      if (offset < list?.total) count++;
+  const paging = (type, direct = "", clickNum = 0) => {
+    if (type === "number") {
+      countT.current = clickNum;
+      setOffset(() => countT.current * limit);
+    } else if (type === "button") {
+      if (direct === "prev") {
+        if (countT.current > 0) {
+          countT.current = countT.current - 1;
+          setOffset(() => countT.current * limit);
+        }
+      } else if (direct === "next") {
+        if ((offset + limit) * (countT.current + 1) < list?.total) {
+          countT.current = countT.current + 1;
+          setOffset(() => countT.current * limit);
+        }
+      }
     }
-    setOffset(count * limit);
   };
 
   const moveDetail = (board_id) => {
@@ -50,6 +63,12 @@ const Board = ({ title }) => {
               total,
             };
           });
+
+          let list = [];
+          for (let i = 0; i < Math.ceil(total / limit); i++) {
+            list.push(i + 1);
+          }
+          setListPage(list);
         }
       })
       .catch((err) => {
@@ -91,9 +110,19 @@ const Board = ({ title }) => {
             </tbody>
           </table>
           <div>
-            <button onClick={() => paging("prev")}>이전</button>
-            페이징 처리 화살표
-            <button onClick={() => paging("next")}>다음</button>
+            <button onClick={() => paging("button", "prev")}>이전</button>
+            {listPage.map((number) => (
+              <span
+                key={number}
+                style={{ margin: "0 10px" }}
+                onClick={({ target }) => {
+                  paging("number", "", target.outerText - 1);
+                }}
+              >
+                {number}
+              </span>
+            ))}
+            <button onClick={() => paging("button", "next")}>다음</button>
           </div>
         </div>
       ) : (
