@@ -87,15 +87,14 @@ const Board = ({ title }) => {
         "Content-Type": "application/json",
       },
       params: {
-        searchType: searchType,
+        searchType,
         searchContent: searchText,
-        limit: 10,
-        offset: 0,
+        limit,
+        offset,
       },
     }).then((res) => {
       console.log(res);
       const { result, status, total } = res.data;
-      console.log("asdasd", result);
       setList(() => {
         return {
           status: true,
@@ -113,17 +112,20 @@ const Board = ({ title }) => {
   };
 
   useLayoutEffect(() => {
+    const url = searchText.length > 0 ? `/search` : "";
+    const params =
+      searchText.length > 0
+        ? { searchType, searchContent: searchText, limit, offset }
+        : { limit, offset };
+
     axios({
-      url: "http://localhost:3000/board/history",
+      url: `http://localhost:3000/board/history${url}`,
       method: "GET",
       header: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      params: {
-        limit,
-        offset,
-      },
+      params,
     })
       .then((res) => {
         const { result, status, total } = res.data;
