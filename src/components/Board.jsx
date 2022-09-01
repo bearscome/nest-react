@@ -25,6 +25,8 @@ const Board = ({ title }) => {
     data: [],
   });
   const [listPage, setListPage] = useState([]);
+  const [searchType, setSearchType] = useState("title");
+  const [searchText, setSearchText] = useState("");
 
   const paging = (type, direct = "", clickNum = 0) => {
     if (type === "number") {
@@ -68,6 +70,46 @@ const Board = ({ title }) => {
         }
       });
     }
+  };
+
+  const searchBoard = () => {
+    console.log(searchType, searchText);
+    if (searchText.length < 1) {
+      alert("감섹힐 딘어를 입력해 주세요.");
+      return;
+    }
+
+    axios({
+      url: "http://localhost:3000/board/history/search",
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      params: {
+        searchType: searchType,
+        searchContent: searchText,
+        limit: 10,
+        offset: 0,
+      },
+    }).then((res) => {
+      console.log(res);
+      const { result, status, total } = res.data;
+      console.log("asdasd", result);
+      setList(() => {
+        return {
+          status: true,
+          data: result,
+          total,
+        };
+      });
+
+      let list = [];
+      for (let i = 0; i < Math.ceil(total / limit); i++) {
+        list.push(i + 1);
+      }
+      setListPage(list);
+    });
   };
 
   useLayoutEffect(() => {
@@ -153,6 +195,18 @@ const Board = ({ title }) => {
               </span>
             ))}
             <button onClick={() => paging("button", "next")}>다음</button>
+          </div>
+          <div>
+            <select onChange={({ target }) => setSearchType(target.value)}>
+              <option value={"title"}>제목</option>
+              <option value={"content"}>본문</option>
+              <option value={"username"}>작성자</option>
+            </select>
+            <input
+              type={"text"}
+              onChange={({ target }) => setSearchText(target.value)}
+            />
+            <button onClick={() => searchBoard()}>검색</button>
           </div>
           {authorities === "ADMIN" && (
             <button onClick={() => deleteAll()}>전체 삭제</button>
